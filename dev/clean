@@ -1,0 +1,2 @@
+sudo rm redis.app
+sudo rm ./bin/*.o
