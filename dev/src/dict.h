@@ -44,16 +44,25 @@
 /* Unused arguments generate annoying warnings... */
 #define DICT_NOTUSED(V) ((void) V)
 
+/*
+ * 哈希表节点
+ * */
 typedef struct dictEntry {
+	//键
     void *key;
+
+    //值
     union {
         void *val;
         uint64_t u64;
         int64_t s64;
     } v;
+
+    //相同键hash值的下一个节点， 使用链地址法来处理键碰撞
     struct dictEntry *next;
 } dictEntry;
 
+//字典处理类型
 typedef struct dictType {
     unsigned int (*hashFunction)(const void *key);
     void *(*keyDup)(void *privdata, const void *key);
@@ -65,18 +74,42 @@ typedef struct dictType {
 
 /* This is our hash table structure. Every dictionary has two of this as we
  * implement incremental rehashing, for the old to the new table. */
+/*
+ * 哈希表
+ * */
 typedef struct dictht {
+	//哈希表节点指针数组（俗称桶，bucket）
     dictEntry **table;
+
+    //指针数组的大小
     unsigned long size;
+
+    //指针数组的长度掩码，用于计算索引值
     unsigned long sizemask;
+
+    //哈希表现有的节点数量
     unsigned long used;
 } dictht;
 
+/*
+ *	字典
+ *
+ *	每个字典使用两个哈希表，用于实现渐进式 rehash
+ * */
 typedef struct dict {
+	//特定于类型的处理函数
     dictType *type;
+
+    //类型处理函数的私有数据
     void *privdata;
+
+    //哈希表，一个字典对应两个哈希表实现渐进式rehash
     dictht ht[2];
+
+    //记录 rehash 进度的标志，值为 -1 表示 rehash 未进行
     int rehashidx; /* rehashing not in progress if rehashidx == -1 */
+
+    //当前正在运作的安全迭代器数量
     int iterators; /* number of iterators currently running */
 } dict;
 

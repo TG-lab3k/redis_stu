@@ -11,37 +11,56 @@ Redis
 			
 			#2 .双端链表数据结构
 	
-						//双向链表节点
-						typedef struct listNode {
-						    struct listNode *prev;
-						    struct listNode *next;
-						    void *value;
-						} listNode;
-						
-						
-						//链表迭代器
-						typedef struct listIter {
-						    listNode *next;
-						    int direction;
-						} listIter;
-						
-						//双向链表
-						typedef struct list {
-						    listNode *head;
-						    listNode *tail;
-						
-						    //对value的复制函数指针
-						    void *(*dup)(void *ptr);
-						
-						    //释放value内存的函数指针
-						    void (*free)(void *ptr);
-						
-						    //对value进行比较的函数指针
-						    int (*match)(void *ptr, void *key);
-						
-						    //链表长度
-						    unsigned long len;
-						} list;
+				//双向链表节点
+				typedef struct listNode {
+				    struct listNode *prev;
+				    struct listNode *next;
+				    void *value;
+				} listNode;
+				
+				
+				//链表迭代器
+				typedef struct listIter {
+				    listNode *next;
+				    int direction;
+				} listIter;
+				
+				//双向链表
+				typedef struct list {
+				    listNode *head;
+				    listNode *tail;
+				
+				    //对value的复制函数指针
+				    void *(*dup)(void *ptr);
+				
+				    //释放value内存的函数指针
+				    void (*free)(void *ptr);
+				
+				    //对value进行比较的函数指针
+				    int (*match)(void *ptr, void *key);
+				
+				    //链表长度
+				    unsigned long len;
+				} list;
 						
 			
-				#2 .双端链表使用实例
+		2) .双端链表使用实例
+			
+	
+	3 .字典
+		1) .双端链表的实现
+			#1 .源码文件位置：dict.h/dict.c
+			参考:http://www.redisbook.com/en/latest/internal-datastruct/dict.html
+			
+			#2 .字典数据结构
+			
+			#3 .字典实现
+			在redis中字典采用hash表来实现
+			
+			哈希算法
+			在redis中使用两种hash算法
+			一是  MurmurHash2 32 bit算法，这种算法的分布率和速度都非常好， 具体信息请参考 MurmurHash 的主页： http://code.google.com/p/smhasher/
+			二是 基于 djb 算法实现的一个大小写无关散列算法，具体信息请参考 http://www.cse.yorku.ca/~oz/hash.html
+			使用哪种算法取决于具体应用所处理的数据
+			命令表以及 Lua 脚本缓存都用到了算法 2
+			算法 1 的应用则更加广泛：数据库、集群、哈希键、阻塞操作等功能都用到了这个算法			
