@@ -81,13 +81,13 @@ typedef struct dictht {
 	//哈希表节点指针数组（俗称桶，bucket）
     dictEntry **table;
 
-    //指针数组的大小
+    //哈希表大小
     unsigned long size;
 
     //指针数组的长度掩码，用于计算索引值
     unsigned long sizemask;
 
-    //哈希表现有的节点数量
+    //哈希表当前的节点数量
     unsigned long used;
 } dictht;
 

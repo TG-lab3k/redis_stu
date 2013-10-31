@@ -316,6 +316,7 @@ int dictAdd(dict *d, void *key, void *val)
     dictEntry *entry = dictAddRaw(d,key);
 
     if (!entry) return DICT_ERR;
+    //使用dictType中的valDup函数
     dictSetVal(d, entry, val);
     return DICT_OK;
 }
@@ -356,6 +357,7 @@ dictEntry *dictAddRaw(dict *d, void *key)
     ht->used++;
 
     /* Set the hash entry fields. */
+    //使用dictType中的keyDup函数
     dictSetKey(d, entry, key);
     return entry;
 }
@@ -660,6 +662,7 @@ static int _dictKeyIndex(dict *d, const void *key)
         /* Search if this slot does not already contain the given key */
         he = d->ht[table].table[idx];
         while(he) {
+        	//dictCompareKeys由dict中dictType的keyCompare函数计算
             if (dictCompareKeys(d, key, he->key))
                 return -1;
             he = he->next;
